@@ -8,16 +8,25 @@ namespace RecognitionApi
     [Route("api/[controller]")]
     public class RecognitionController : ControllerBase
     {
+        static string detectPath;
+        static string pythonScriptPath;
+        static string _pythonInterpretatorPath;
+        static string inputFolderPath;
+        static string outputFolderPath;
+
+        public RecognitionController() 
+        {
+            detectPath = Environment.GetEnvironmentVariable("detectPath");
+            _pythonInterpretatorPath = Environment.GetEnvironmentVariable("python");
+            pythonScriptPath = Environment.GetEnvironmentVariable("script");
+            inputFolderPath = Environment.GetEnvironmentVariable("inputPath");
+            outputFolderPath = Environment.GetEnvironmentVariable("outputPath");
+        }
         static readonly HttpClient client = new HttpClient();
-        static readonly string detectPath = Path.Combine(Directory.GetCurrentDirectory(), "runs", "detect");
-        static readonly string pythonScriptPath = @"C:\Users\Andrew\Desktop\python\testScript.py";
-        static readonly string _pythonInterpretatorPath = @"C:\Users\Andrew\AppData\Local\Programs\Python\Python312\python.exe";
 
         [HttpPost]
         public async Task<IActionResult> GetResult([FromBody] string[] urls)
         {
-            string inputFolderPath = @"C:\Users\Andrew\Desktop\InputPictures";
-            string outputFolderPath = @"C:\Users\Andrew\Desktop\OutputPictures";
             DirectoryInfo directoryInfo = new DirectoryInfo(inputFolderPath);
             directoryInfo.Delete(true);
             Directory.CreateDirectory(inputFolderPath);
